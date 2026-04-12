@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chẩn Đoán Y Khoa</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <div class="top-naval-bar" style="position:relative; z-index:1000;">
+        <div class="nav-content" style="position: relative; justify-content: flex-end;">
+            <div style="display:flex; align-items:center; gap: 10px; position: absolute; left: 50%; transform: translateX(-50%); width: max-content;">
+                <div style="background: linear-gradient(135deg, #0ea5e9, #8b5cf6); border-radius: 8px; padding: 6px; display: flex; box-shadow: 0 4px 6px -1px rgba(14, 165, 233, 0.3);">
+                    <svg viewBox="0 0 24 24" width="24" height="24" stroke="white" stroke-width="2" fill="none"
+                        stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M22 12h-4l-3 9L9 3l-3 9H2"></path>
+                    </svg>
+                </div>
+                <span class="nav-brand" style="font-size: 1.6rem; font-weight: 800; background: linear-gradient(135deg, #0369a1, #6d28d9); -webkit-background-clip: text; -webkit-text-fill-color: transparent; letter-spacing: -0.5px;">Hệ Thống Chẩn Đoán Y Khoa Toàn Diện</span>
+            </div>
+            <div style="display:flex; align-items:center; gap: 12px; z-index: 10;">
+                <!-- Dark Mode Toggle -->
+                <button id="btn-dark-mode"
+                    style="background:#1e293b; color:#fff; border:none; padding: 6px 12px; border-radius: 6px; cursor:pointer; font-size: 0.85rem; font-weight:600; display:flex; align-items:center; gap: 6px; transition: 0.2s;">
+                    <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2" fill="none"
+                        stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
+                    <span>Chế độ tối</span>
+                </button>
+                <!-- Chuyển đổi Ngôn Ngữ -->
+                <div class="lang-switch-container"
+                    style="display:flex; align-items:center; gap:5px; background: #f8fafc; padding: 4px 6px; border-radius: 8px; border: 1px solid #cbd5e1;">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#64748b" stroke-width="2"
+                        stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="10"></circle>
+                        <line x1="2" y1="12" x2="22" y2="12"></line>
+                        <path
+                            d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z">
+                        </path>
+                    </svg>
+                    <div id="google_translate_element"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script type="text/javascript">
+        function googleTranslateElementInit() {
+            new google.translate.TranslateElement({
+                pageLanguage: 'vi',
+                includedLanguages: 'vi,en,ko,zh-CN,ja,ru',
+                layout: google.translate.TranslateElement.InlineLayout.SIMPLE
+            }, 'google_translate_element');
+        }
+    </script>
+    <script type="text/javascript"
+        src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+
+    <!-- MAIN DASHBOARD LAYOUT (V9) -->
+    <div class="dashboard-wrapper">
+
+        <!-- CỘT TRÁI: DANH MỤC ĐIỀU HƯỚNG TĨNH (HORIZONTAL TABS MENU) -->
+        <aside class="sidebar-panel">
+            <div class="menu-list" id="sidebar-menu">
+
+                <div class="menu-group-title">Hồ Sơ Căn Bản</div>
+                <button class="nav-item active" data-target="pane-profile"
+                    style="display:flex; align-items:center; gap:8px;">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                        <circle cx="12" cy="7" r="4"></circle>
+                    </svg>
+                    Hồ Sơ Y Tế & Sinh Hiệu
+                </button>
+                <button class="nav-item" data-target="pane-emr" style="display:flex; align-items:center; gap:8px;">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path>
+                    </svg>
+                    Hồ Sơ Lưu Trữ (EMR)
+                </button>
+
+                <div class="menu-group-title">Khảo Sát Khám Lâm Sàng</div>
+                <div id="nav-symptoms">
+                    <!-- Javascript sẽ đổ danh sách các Nhóm triệu chứng thành các nút nav-item ở đây -->
+                </div>
+
+                <div class="menu-group-title">Khám Cận Lâm Sàng</div>
+                <button class="nav-item" data-target="pane-imaging" style="display:flex; align-items:center; gap:8px;">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                        <circle cx="8.5" cy="8.5" r="1.5"></circle>
+                        <polyline points="21 15 16 10 5 21"></polyline>
+                    </svg>
+                    Chẩn Đoán Hình Ảnh AI
+                </button>
+
+                <div class="menu-group-title">Giáo Dục Y Khoa</div>
+                <button class="nav-item" data-target="pane-education" style="display:flex; align-items:center; gap:8px;">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
+                        <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
+                    </svg>
+                    Công Nghệ Chẩn Đoán
+                </button>
+
+                <div class="menu-divider"></div>
+
+                <button class="btn-trigger-analyze" id="btn-analyze">
+                    XÁC NHẬN CHẨN ĐOÁN
+                </button>
+            </div>
+        </aside>
+
+        <!-- CỘT PHẢI: DISPLAY CANVAS ĐA LỚP -->
+        <main class="main-panel relative">
+
+            <!-- PANE 1: HỒ SƠ Y TẾ & SINH HIỆU -->
+            <div id="pane-profile" class="tab-pane active fade-in">
+                <div class="card patient-card max-w-800">
+                    <h3 class="section-title">Khai Báo Định Danh Y Tế</h3>
+                    <form id="intake-form" class="form-grid">
+                        <div class="input-group full-width">
+                            <label>Họ và Tên Bệnh Nhân</label>
+                            <input type="text" id="p-name" placeholder="VD: Nguyễn Văn An" autocomplete="off">
+                        </div>
+                        <div class="input-group">
+                            <label>Độ tuổi</label>
+                            <select id="p-age">
+                                <option value="adult" selected>Thành niên (15 - 55 tuổi)</option>
+                                <option value="child">Nhi khoa (Trẻ em < 15 tuổi)</option>
+                                <option value="elderly">Lão khoa (Người già > 55 tuổi)</option>
+                            </select>
+                        </div>
+                        <div class="input-group">
+                            <label>Giới tính</label>
+                            <select id="p-gender">
+                                <option value="male" selected>Nam giới</option>
+                                <option value="female">Nữ giới</option>
+                            </select>
+                        </div>
+                        <div class="input-group full-width">
+                            <label>Tiền sử Bệnh lý Nền</label>
+                            <select id="p-disease">
+                                <option value="none" selected>Khỏe mạnh bình thường</option>
+                                <option value="stomach">Bệnh lý Dạ dày / Loét tá tràng</option>
+                                <option value="cardio">Bệnh lý Tim mạch / Huyết áp</option>
+                                <option value="renal">Bệnh lý Thận niệu</option>
+                                <option value="yes">Bệnh mạn tính khác (Tiểu đường, Gan...)</option>
+                            </select>
+                        </div>
+                        <div class="input-group full-width">
+                            <label>Tiền sử Dị ứng</label>
+                            <input type="text" id="p-allergies" placeholder="Ví dụ: Dị ứng Penicillin, Hải sản..."
+                                autocomplete="off">
+                        </div>
+                        <div class="input-group full-width">
+                            <label>Thuốc Bệnh Nhân Đang Sử Dụng</label>
+                            <input type="text" id="p-medications"
+                                placeholder="Ví dụ: Đang uống Corticoid, Kháng viêm NSAID..." autocomplete="off">
+                        </div>
+                    </form>
+                </div>
+
+                <div class="card vitals-card max-w-800 mt-4">
+                    <h3 class="section-title">Nhập Sinh Hiệu (Tùy Chọn)</h3>
+                    <div class="vitals-grid">
+                        <div class="input-group">
+                            <label>Huyết Áp Tâm Thu (mmHg)</label>
+                            <input type="number" id="vitals-bp" placeholder="Nhập số: 130">
+                        </div>
+                        <div class="input-group">
+                            <label>Đường Huyết Đói (mg/dL)</label>
+                            <input type="number" id="vitals-bs" placeholder="Nhập số: 95">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- API GEMINI BẢN QUYỀN -->
+                <div class="card max-w-800 mt-4" style="border-left: 4px solid #8b5cf6;">
+                    <h3 class="section-title"
+                        style="color: #6d28d9; border-bottom-color:#ddd6fe; display:flex; justify-content:space-between; align-items:center;">
+                        <span>
+                            <svg viewBox="0 0 24 24" width="20" height="20"
+                                style="vertical-align:-3px; margin-right:5px" stroke="currentColor" stroke-width="2"
+                                fill="none">
+                                <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
+                            </svg>
+                            Tính Năng Trí Tuệ Nhân Tạo
+                        </span>
+                        <button id="btn-api-settings" title="Cài Đặt API LLM"
+                            style="background:none; border:none; cursor:pointer; font-size:1.2rem; color:#8b5cf6; padding: 5px;">⚙️</button>
+                    </h3>
+
+                    <div class="input-group full-width relative">
+                        <label style="display:flex; justify-content:space-between; align-items:flex-end;">
+                            <span>Tường thuật lời khai của bệnh nhân:</span>
+                            <button id="btn-mic" type="button"
+                                style="background:#ef4444; color:white; border:none; padding:6px 12px; border-radius:50px; font-weight:600; cursor:pointer; font-size:0.85rem; box-shadow: 0 4px 6px rgba(239,68,68,0.2); display: flex; align-items:center; gap: 5px;">
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                    stroke-width="2">
+                                    <path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3z"></path>
+                                    <path d="M19 10v2a7 7 0 0 1-14 0v-2"></path>
+                                    <line x1="12" y1="19" x2="12" y2="23"></line>
+                                    <line x1="8" y1="23" x2="16" y2="23"></line>
+                                </svg>
+                                Thu Âm
+                            </button>
+                        </label>
+                        <textarea id="nlp-text" rows="4"
+                            placeholder="Ví dụ: Bác sĩ ơi, từ sáng nay em bị đau đầu, hắt xì hơi liên tục..."
+                            style="font-family:inherit; padding:15px; border:1px solid #cbd5e1; border-radius:8px; font-size:0.95rem; resize:vertical; outline:none; background:#faf5ff;"></textarea>
+                        <div id="mic-status"
+                            style="font-size:0.8rem; color:#ef4444; margin-top:5px; font-weight:600; display:none;">Đang
+                            thu âm... (Hãy nói rõ ràng vào Micro)</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- PANE: QUẢN LÝ EMR LƯU TRỮ -->
+            <div id="pane-emr" class="tab-pane fade-in hidden">
+                <div class="card max-w-800">
+                    <h3 class="section-title">Kho Lưu Trữ Bệnh Án Điện Tử (EMR)</h3>
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 20px;">
+                        <p style="font-size:0.9rem; color: #64748b; margin: 0;">Lịch sử các lần chẩn đoán thành công
+                            được liên kết theo Mã Bệnh Nhân (PID).</p>
+                        <button id="btn-export-csv" class="btn"
+                            style="padding: 5px 12px; font-size: 0.85rem; background:#10b981; border:none;">Xuất CSV Báo
+                            Cáo</button>
+                    </div>
+                    <table class="emr-table" style="width:100%; border-collapse:collapse; font-size:0.9rem;">
+                        <thead>
+                            <tr style="background:#f1f5f9; text-align:left; border-bottom:2px solid #cbd5e1;">
+                                <th style="padding:10px;">Ngày Tạo</th>
+                                <th style="padding:10px;">Mã BN (PID)</th>
+                                <th style="padding:10px;">Họ và Tên</th>
+                                <th style="padding:10px;">Chẩn Đoán Sơ Bộ</th>
+                                <th style="padding:10px;">Mức Độ Khớp</th>
+                                <th style="padding:10px; text-align:center;">Tác Vụ</th>
+                            </tr>
+                        </thead>
+                        <tbody id="emr-tbody">
+                            <!-- JS Inject -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- PANES SINH ĐỘNG NHÓM TRIỆU CHỨNG -->
+            <div id="symptoms-panes-container">
+                <!-- Data HTML đổ Triệu chứng Lâm sàng từ JS -->
+            </div>
+
+            <!-- PANE: HÌNH ẢNH CẬN LÂM SÀNG -->
+            <div id="pane-imaging" class="tab-pane fade-in hidden">
+                <div class="card scan-card max-w-800">
+                    <h3 class="section-title" style="color: #0284c7;">Trung Tâm Phân Tích Hình Ảnh (AI Computer Vision)
+                    </h3>
+                    <p style="font-size:0.9rem; color: #64748b; margin-bottom: 20px;">
+                        Nhập ảnh phim X-Quang, siêu âm hoặc ảnh da liễu để Trí tuệ Nhân tạo truy quét rủi ro bệnh lý.
+                    </p>
+
+                    <div class="upload-control" style="margin-bottom: 20px;">
+                        <select id="ai-model-type" class="model-select" style="min-width: 250px;">
+                            <option value="xray_lung_opacity">Model Phân Tích X-Quang Phổi</option>
+                            <option value="scan_skin_lesion">Model Phân Tích Da Liễu</option>
+                            <option value="scan_tumor_mass">Model Đọc Siêu âm Khối U</option>
+                        </select>
+                        <label class="btn upload-btn" for="image-upload"
+                            style="background:#f1f5f9; border: 1px solid #cbd5e1; color:#0f172a; padding: 8px 15px;">
+                            Tải Hình Ảnh Lên
+                        </label>
+                        <input type="file" id="image-upload" accept="image/*" class="hidden">
+                    </div>
+
+                    <div class="image-viewer-box" id="image-viewer-box" style="height: 350px;">
+                        <p id="placeholder-text" style="color: #94a3b8; font-size:0.9rem;">Không gian trống. Hãy tải ảnh
+                            lên.</p>
+                        <img id="image-preview" src="" alt="Preview" class="hidden">
+
+                        <!-- Lưới Scanner Haptic -->
+                        <div class="scanner-laser hidden" id="scanner-laser"></div>
+                    </div>
+
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-top:20px;">
+                        <button id="btn-scan" class="btn primary-btn" disabled style="padding: 12px 25px;">Bắt Đầu Quét
+                            AI</button>
+                        <div id="ai-scan-log" class="scan-log-text" style="font-size: 1rem;"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- PANE: CÔNG NGHỆ CHẨN ĐOÁN (GIÁO DỤC Y KHOA) -->
+            <div id="pane-education" class="tab-pane fade-in hidden">
+                <div class="card max-w-800">
+                    <h3 class="section-title" style="color: #0ea5e9; display: flex; align-items: center; gap: 10px;">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
+                            <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
+                        </svg>
+                        Khung Kiến Thức Công Nghệ Y Khoa Định Hướng
+                    </h3>
+                    
+                    <div style="display: grid; grid-template-columns: 1fr; gap: 20px;">
+                        
+                        <!-- Card 1 -->
+                        <div style="border: 1px solid var(--border-color); border-radius: 8px; padding: 20px; background: #f8fafc; display: flex; gap: 15px; align-items: flex-start; transition: 0.2s; box-shadow: 0 2px 4px rgba(0,0,0,0.03);">
+                            <div style="background: #e2e8f0; color: #475569; padding: 12px; border-radius: 8px; flex-shrink: 0;">
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 12h-4l-3 9L9 3l-3 9H2"></path></svg>
+                            </div>
+                            <div>
+                                <h4 style="font-size: 1.1rem; font-weight: 700; color: var(--text-dark); margin-bottom: 8px;">Chẩn Đoán Truyền Thống</h4>
+                                <p style="font-size: 0.95rem; line-height: 1.6; color: var(--text-muted); margin: 0;">Thăm khám lâm sàng (hỏi bệnh, kiểm tra triệu chứng) kết hợp xét nghiệm (cận lâm sàng) như X-quang, CT-scan, MRI, xét nghiệm máu, giải phẫu bệnh.</p>
+                            </div>
+                        </div>
+
+                        <!-- Card 2 -->
+                        <div style="border: 1px solid var(--border-color); border-radius: 8px; padding: 20px; background: #f0fdfa; display: flex; gap: 15px; align-items: flex-start; transition: 0.2s; box-shadow: 0 2px 4px rgba(0,0,0,0.03);">
+                            <div style="background: #ccfbf1; color: #0f766e; padding: 12px; border-radius: 8px; flex-shrink: 0;">
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg>
+                            </div>
+                            <div>
+                                <h4 style="font-size: 1.1rem; font-weight: 700; color: #0f766e; margin-bottom: 8px;">Trí Tuệ Nhân Tạo (AI) Trong Chẩn Đoán</h4>
+                                <p style="font-size: 0.95rem; line-height: 1.6; color: var(--text-muted); margin: 0;">Sử dụng thuật toán học sâu (deep learning) để đọc ảnh y tế (phim phổi, X-quang), hệ thống CAD (Computer-aided Detection) giúp phát hiện tổn thương nhỏ.</p>
+                            </div>
+                        </div>
+
+                        <!-- Card 3 -->
+                        <div style="border: 1px solid var(--border-color); border-radius: 8px; padding: 20px; background: #fef2f2; display: flex; gap: 15px; align-items: flex-start; transition: 0.2s; box-shadow: 0 2px 4px rgba(0,0,0,0.03);">
+                            <div style="background: #fee2e2; color: #b91c1c; padding: 12px; border-radius: 8px; flex-shrink: 0;">
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 12h6m-6 4h6m2 5H7a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5.586a1 1 0 0 1 .707.293l5.414 5.414a1 1 0 0 1 .293.707V19a2 2 0 0 1-2 2z"></path></svg>
+                            </div>
+                            <div>
+                                <h4 style="font-size: 1.1rem; font-weight: 700; color: #b91c1c; margin-bottom: 8px;">Y Học Cá Nhân Hóa & Di Truyền</h4>
+                                <p style="font-size: 0.95rem; line-height: 1.6; color: var(--text-muted); margin: 0;">Phân tích gen để dự báo và chẩn đoán nguy cơ bệnh tật. Giúp lên phác đồ phòng ngừa và điều trị tối ưu riêng biệt cho từng cá thể dựa trên hệ gen.</p>
+                            </div>
+                        </div>
+
+                        <!-- Card 4 -->
+                        <div style="border: 1px solid var(--border-color); border-radius: 8px; padding: 20px; background: #eff6ff; display: flex; gap: 15px; align-items: flex-start; transition: 0.2s; box-shadow: 0 2px 4px rgba(0,0,0,0.03);">
+                            <div style="background: #dbeafe; color: #1d4ed8; padding: 12px; border-radius: 8px; flex-shrink: 0;">
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="5" y="2" width="14" height="20" rx="2" ry="2"></rect><line x1="12" y1="18" x2="12.01" y2="18"></line></svg>
+                            </div>
+                            <div>
+                                <h4 style="font-size: 1.1rem; font-weight: 700; color: #1d4ed8; margin-bottom: 8px;">Hệ Thống Chẩn Đoán Từ Xa (Telehealth)</h4>
+                                <p style="font-size: 0.95rem; line-height: 1.6; color: var(--text-muted); margin: 0;">Ứng dụng AI hỗ trợ khám bệnh từ xa, giải quyết rào cản địa lý và đặc biệt hữu ích cho việc chăm sóc y tế tại các khu vực vùng sâu vùng xa.</p>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+            <!-- PANE: BÁO CÁO PHÂN TÍCH (RESULTS) -->
+            <div id="pane-results" class="tab-pane fade-in hidden">
+                <div class="report-header" style="display:flex; justify-content:space-between; align-items:center;">
+                    <div>
+                        <h2>Báo Cáo Chẩn Đoán Y Khoa</h2>
+                        <p style="color: #64748b; margin-top:5px;">Trí tuệ nhân tạo đã xử lý và gạn lọc thông tin để
+                            xuất ra kết quả.</p>
+                    </div>
+                    <button id="btn-print-pdf" class="btn primary-btn" style="background:#0f172a;">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2">
+                            <polyline points="6 9 6 2 18 2 18 9"></polyline>
+                            <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path>
+                            <rect x="6" y="14" width="12" height="8"></rect>
+                        </svg>
+                        In Bệnh Án PDF
+                    </button>
+                </div>
+
+                <div id="ai-results-container">
+                    <div
+                        style="text-align:center; padding: 50px; color: #94a3b8; border: 2px dashed #cbd5e1; border-radius: 8px;">
+                        Hãy hoàn tất nhập liệu các Danh mục ở Menu bên Trái và bấm "Xác nhận chẩn đoán" để xuất Báo Cáo
+                        tại đây.
+                    </div>
+                </div>
+
+                <div id="result-unknown" class="card hidden alert-error">
+                    <h3 style="margin-bottom: 5px; font-size:1.1rem;">Chưa thể xác định chẩn đoán!</h3>
+                    <p style="margin-bottom: 0;">Các biến mà bạn cung cấp không ánh xạ đến một mô thức bệnh lý cụ thể
+                        trong thư viện kiến thức.</p>
+                </div>
+
+                <!-- CHATBOT BÁC SĨ (V11) CHUYỂN THÀNH WIDGET NỔI -->
+            </div>
+
+        </main>
+    </div>
+
+    <div id="floating-chat-btn"
+        style="position:fixed; bottom:30px; right:30px; width:65px; height:65px; background:linear-gradient(135deg, #0ea5e9, #0284c7); color:white; border-radius:50%; display:flex; justify-content:center; align-items:center; cursor:pointer; box-shadow:0 8px 20px rgba(2, 132, 199, 0.4); z-index:9999; transition:transform 0.2s;"
+        title="Trợ Lý Y Khoa AI">
+        <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+            stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+        </svg>
+    </div>
+
+    <div class="card hidden" id="chatbot-container"
+        style="position:fixed; bottom:110px; right:30px; width:380px; z-index:9998; border-top: 4px solid #0ea5e9; background:#ffffff; box-shadow:0 15px 35px rgba(0,0,0,0.15); border-radius:12px; padding:20px; flex-direction:column; display:none;">
+        <h3
+            style="color: #0369a1; font-size:1.1rem; margin-bottom:15px; display:flex; justify-content:space-between; align-items:center; margin-top:0;">
+            <span><svg viewBox="0 0 24 24" width="20" height="20" style="vertical-align:-4px; margin-right:5px"
+                    stroke="currentColor" stroke-width="2" fill="none">
+                    <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+                </svg> Trợ Lý Bác Sĩ AI</span>
+            <button id="btn-close-chat"
+                style="background:none; border:none; cursor:pointer; font-size:1.5rem; color:#94a3b8; line-height:1; transition:0.2s;">&times;</button>
+        </h3>
+        <div id="chat-history"
+            style="height:320px; overflow-y:auto; background:#f8fafc; border:1px solid #e2e8f0; border-radius:8px; padding:15px; font-size:0.95rem; margin-bottom:15px; display:flex; flex-direction:column;">
+            <div style="color:#64748b; font-style:italic; text-align:center; font-size:0.85rem; margin-bottom:10px;">Hệ
+                thống AI sẳn sàng tư vấn hỏi đáp sau chẩn đoán lâm sàng.</div>
+        </div>
+        <div style="display:flex; gap:10px;">
+            <input type="text" id="chat-input" placeholder="Nhắn tin cho Bác sĩ..."
+                style="flex:1; padding:12px 18px; border:1px solid #cbd5e1; border-radius:30px; outline:none; font-size:0.95rem; background:#f1f5f9; transition:0.2s;">
+            <button id="btn-chat-send" class="btn primary-btn"
+                style="padding:10px 16px; border-radius:30px; border:none;"><svg viewBox="0 0 24 24" width="18"
+                    height="18" stroke="currentColor" stroke-width="2" fill="none" stroke-linejoin="round">
+                    <line x1="22" y1="2" x2="11" y2="13"></line>
+                    <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+                </svg></button>
+        </div>
+    </div>
+
+    <script src="knowledgeBase.js"></script>
+    <script src="inferenceEngine.js"></script>
+    <script src="app.js"></script>
+</body>
+
+</html>
