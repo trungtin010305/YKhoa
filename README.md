@@ -8,7 +8,7 @@
 
 **Hệ Thống Chẩn Đoán Y Khoa AI** là một ứng dụng web y tế thông minh, tích hợp Trí tuệ Nhân tạo (AI) và hệ thống suy luận logic lâm sàng (Expert System) với giao diện Glassmorphism hiện đại. Dự án hỗ trợ thu thập sinh hiệu, khai báo triệu chứng, phân tích cận lâm sàng và đề xuất hướng điều trị sơ bộ.
 
-![Giao diện chính](https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?auto=format&fit=crop&w=1200&q=80)
+![Giao diện chính]([https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?auto=format&fit=crop&w=1200&q=80](https://cdn.fpt-is.com/vi/AI-trong-y-te-FPT-IS-1743578295.png))
 
 ---
 
@@ -34,4 +34,4 @@ Dự án chạy hoàn toàn thuần túy, không cần Node.js build step:
 Dự án được xây dựng cho **mục đích giáo dục và nghiên cứu**. Mọi kết quả phân tích chỉ mang tính chất tham khảo, **không thay thế** cho chẩn đoán chuyên môn từ bác sĩ.
 
 ---
-*Phát triển bởi: Nguyễn Trung Tín*
+*Phát triển bởi: Nhóm DaTai
