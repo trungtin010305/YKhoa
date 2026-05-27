@@ -24,6 +24,31 @@ Hệ thống vận hành dựa trên cơ chế học máy lai (**Hybrid AI Model
 
 ---
 
+## 📱 Bản Mô Phỏng Giao Diện Thực Tế (Application Interface Mockup)
+
+Dưới đây là cấu trúc trực quan của bảng điều khiển thông minh ứng dụng ngôn ngữ thiết kế **Glassmorphic UI**:
+
+```text
++---------------------------------------------------------------------------------+
+|  🩺 MEDICAL AI DIAGNOSIS CORE                                   [ VI | EN ]     |
++---------------------------------------------------------------------------------+
+|  [ 👤 Hồ sơ Bệnh nhân ]  Họ tên: Nguyễn Văn A       Tuổi: 28     Giới tính: Nam |
++---------------------------------------------------------------------------------+
+|  [ 🌡️ Chỉ số Sinh hiệu đầu vào ]                                                 |
+|  - Thân nhiệt: 38.8 °C [🚨 Sốt cao]            - Chỉ số SpO2: 94% [⚠️ Nguy cơ]   |
++---------------------------------------------------------------------------------+
+|  [ 🗣️ Tường thuật Bệnh sử tự do (NLP Input via Gemini API) ]                     |
+|  "Tôi bị ho khan liên tục khoảng 3 ngày nay, tối đến cảm thấy hơi khó thở và     |
+|   mất hoàn toàn vị giác khi ăn uống..."                                         |
++---------------------------------------------------------------------------------+
+|  [ 🧠 KẾT QUẢ CHẨN ĐOÁN LÂM SÀNG SƠ BỘ ]                                        |
+|  ■ Định hướng 1: Nhiễm trùng đường hô hấp cấp (Độ tin cậy CF: 87.5%)            |
+|  ■ Khuyến nghị: Thực hiện chụp X-Quang phổi thẳng và test nhanh vi-rút.          |
++---------------------------------------------------------------------------------+
+```
+
+---
+
 ## 🛠️ Kiến Trúc Hệ Thống
 
 Để đảm bảo tính toàn vẹn và bảo mật dữ liệu y tế nhạy cảm, hệ thống áp dụng nguyên lý **Separation of Concerns (SoC)** và thực thi toán học cục bộ (**Edge Inference**) trực tiếp ở phía Client.
@@ -61,6 +86,29 @@ graph TD
 
 ---
 
+## 📊 Phân Nhóm Ngưỡng Chỉ Số Tri Thức (Knowledge Thresholds)
+
+Hệ thống chuyển đổi các chỉ số lâm sàng thu thập được thành các vector logic dựa trên bảng phân loại y khoa tích hợp sẵn:
+
+| Chỉ số sinh hiệu | Ngưỡng bình thường | Ngưỡng nguy cơ (Cảnh báo số hóa) | Trạng thái hệ thống |
+| :--- | :--- | :--- | :--- |
+| **Thân nhiệt** | $36.5^\circ\text{C} - 37.5^\circ\text{C}$ | $<35^\circ\text{C}$ hoặc $>38.5^\circ\text{C}$ | 🚨 `FEVER_ALERT` |
+| **Nồng độ SpO2** | $96\% - 100\%$ | $\le 94\%$ | 🚑 `HYPOXIA_CRITICAL` |
+| **Huyết áp tâm thu**| $90\text{ mmHg} - 120\text{ mmHg}$ | $<90\text{ mmHg}$ hoặc $>140\text{ mmHg}$ | ⚠️ `BP_ANOMALY` |
+
+---
+
+## 🧰 Hệ Sinh Thái Công Nghệ (Technology Stack Mapping)
+
+| Lớp kiến trúc (Layer) | Công nghệ tích hợp | Mục tiêu tối ưu |
+| :--- | :--- | :--- |
+| **Giao diện (Front-End)** | HTML5 Semantic, CSS3 Vanilla, Glassmorphic Glass | Tối đa tốc độ tải trang, tăng mật độ trải nghiệm thị giác cho Bác sĩ. |
+| **Xử lý hội thoại (NLP)** | Google Gemini 2.5 Flash API | Trích xuất ngữ nghĩa thực thể y khoa thời gian thực từ chuỗi văn bản tự do. |
+| **Lõi suy luận (Logic)** | Thuật toán Chaining thuần (ES6 Engine) | Thực thi cây quyết định lập luận y học không cần giao tiếp Server. |
+| **Học sâu (Edge Deep Learning)** | TensorFlow.js | Sẵn sàng chạy các mô hình phân loại nén trực tiếp trên trình duyệt. |
+
+---
+
 ## 📂 Cấu Trúc Mã Nguồn
 
 ```text
@@ -77,13 +125,21 @@ graph TD
 
 Dưới đây là sơ đồ phân nhiệm chi tiết cho các thành viên thuộc **nhóm DaTai** trong suốt vòng đời phát triển dự án:
 
-| Thành viên | Vai trò chính | Nhiệm vụ cụ thể | Minh chứng mã nguồn |
-| :--- | :--- | :--- | :--- |
-| **Nguyễn Trung Tín (Nhóm Trưởng)** | **Backend & AI Engineer** | - Thiết kế thuật toán suy luận `Forward/Backward Chaining`. <br> - Xây dựng công thức tính trọng số điểm tin cậy ($CF$). | `inferenceEngine.js` |
-| **Nguyễn Nhất Linh** | **Knowledge Base Specialist** | - Nghiên cứu định danh danh mục bệnh lý y khoa. <br> - Thiết lập ma trận ánh xạ giữa triệu chứng và ngưỡng sinh hiệu. | `knowledgeBase.js` |
-| **Nguyễn Quốc Khánh** | **Frontend Developer** | - Phát triển giao diện người dùng theo phong cách **Glassmorphism**. <br> - Tối ưu hóa UI/UX responsive đa nền tảng. | `index.html`, `style.css` |
-| **Phạm Nguyễn Tấn Đạt** | **Integrator & NLP Specialist** | - Tích hợp luồng điều phối ứng dụng. <br> - Thiết kế hệ thống prompt-engineering kết nối cấu trúc `Gemini API`. | `app.js` |
-| **Huỳnh Nhựt Hải** | **QA / Tester** | - Lập kịch bản kiểm thử lâm sàng giả định. <br> - Kiểm tra và phát hiện lỗi luồng logic (Edge cases). | `README.md` (Testing Section) |
+| Thành viên | Nhiệm vụ cụ thể | Minh chứng mã nguồn |
+| :--- | :--- | :--- |
+| **Nguyễn Trung Tín (Nhóm Trưởng)** | - Thiết kế thuật toán suy luận `Forward/Backward Chaining`. <br> - Xây dựng công thức tính trọng số điểm tin cậy ($CF$). | `inferenceEngine.js` |
+| **Nguyễn Nhất Linh** | - Nghiên cứu định danh danh mục bệnh lý y khoa. <br> - Thiết lập ma trận ánh xạ giữa triệu chứng và ngưỡng sinh hiệu. | `knowledgeBase.js` |
+| **Nguyễn Quốc Khánh** | - Phát triển giao diện người dùng theo phong cách **Glassmorphism**. <br> - Tối ưu hóa UI/UX responsive đa nền tảng. | `index.html`, `style.css` |
+| **Phạm Nguyễn Tấn Đạt** | - Tích hợp luồng điều phối ứng dụng. <br> - Thiết kế hệ thống prompt-engineering kết nối cấu trúc `Gemini API`. | `app.js` |
+| **Huỳnh Nhựt Hải** | - Lập kịch bản kiểm thử lâm sàng giả định. <br> - Kiểm tra và phát hiện lỗi luồng logic (Edge cases). | `README.md` (Testing Section) |
+
+---
+
+## 🛡️ Tiêu Chuẩn Bảo Mật & Quyền Riêng Tư (Data Privacy)
+
+*   **Zero-Server Storage:** Hệ thống không lưu trữ bất kỳ thông tin cá nhân hay lịch sử triệu chứng nào của bệnh nhân lên server máy chủ trung gian.
+*   **Local Processing:** Toàn bộ dữ liệu tính toán logic chuyên gia được cô lập bên trong bộ nhớ Runtime cục bộ của trình duyệt người dùng.
+*   **API Security:** Khóa cấu hình kết nối API thông minh được mã hóa đầu cuối và chỉ kích hoạt khi thực hiện yêu cầu bóc tách ngôn ngữ tự nhiên.
 
 ---
 
@@ -91,7 +147,7 @@ Dưới đây là sơ đồ phân nhiệm chi tiết cho các thành viên thu�
 
 ### 1. Sao chép kho lưu trữ
 ```bash
-git clone [https://github.com/trungtin010305/YKhoa.git](https://github.com/trungtin010305/YKhoa.git)
+git clone url?id=3.git
 cd YKhoa
 ```
 
@@ -114,6 +170,14 @@ Hệ thống vận hành hoàn toàn ở phía Client. Để các ES6 Module ho�
 | :--- | :--- | :--- |
 | **Kịch bản 1** | Sốt cao $>39^\circ\text{C}$, ho khan, mất vị giác, SpO2 $94\%$ | Kích hoạt cảnh báo suy hô hấp / Định hướng nhiễm virus |
 | **Kịch bản 2** | Đau âm ỉ vùng thượng vị, ợ chua, xuất hiện lúc đói | Gợi ý theo dõi viêm loét dạ dày - tá tràng |
+
+---
+
+## 🗺️ Lộ Trình Phát Triển Dự Án (Project Roadmap)
+
+- [x] **Giai đoạn 1:** Xây dựng lõi thuật toán suy luận lai (Hybrid Engine) và giao diện Web cơ bản.
+- [ ] **Giai đoạn 2:** Mở rộng Cơ sở dữ liệu tri thức (`knowledgeBase.js`) lên hơn 150+ mã định danh bệnh lý phổ biến.
+- [ ] **Giai đoạn 3:** Nghiên cứu tích hợp WebRTC kết nối đo đạc trực tiếp từ các thiết bị IoT y tế cá nhân cầm tay.
 
 ---
 
