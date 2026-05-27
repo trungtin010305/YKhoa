@@ -34,4 +34,4 @@ Dự án chạy hoàn toàn thuần túy, không cần Node.js build step:
 Dự án được xây dựng cho **mục đích giáo dục và nghiên cứu**. Mọi kết quả phân tích chỉ mang tính chất tham khảo, **không thay thế** cho chẩn đoán chuyên môn từ bác sĩ.
 
 ---
-*Phát triển bởi: Nhóm 2
+*Phát triển bởi: Nhóm DaTai
