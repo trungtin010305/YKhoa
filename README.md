@@ -1,10 +1,10 @@
-# 🩺 Hệ Thống Chẩn Đoán Y Khoa AI
+# 🩺 Hệ thống chẩn đoán y tế lai tiên tiến
 ### *Advanced Hybrid Medical Diagnosis System*
 
 ![Ứng dụng công nghệ trí tuệ nhân tạo AI trong chẩn đoán hình ảnh y khoa](https://citgroup.vn/wp-content/uploads/2025/03/Ung-dung-cong-nghe-tri-tue-nhan-tao-AI-trong-chuan-doan-hinh-anh-y-khoa.jpg)
 
 <p align="center">
-  <a href="url?id=3">
+  <a href="https://github.com/trungtin010305/YKhoa">
     <img src="https://img.shields.io/badge/Version-1.5.0-007acc?style=flat-square&logo=semver" alt="Version" />
   </a>
   <img src="https://img.shields.io/badge/JavaScript-ES6%2B-f7df1e?style=flat-square&logo=javascript&logoColor=black" alt="JavaScript" />
@@ -16,7 +16,7 @@
 
 ## 🚀 Giới Thiệu Dự Án
 
-> 💡 **Tổng quan:** **Hệ Thống Chẩn Đoán Y Khoa AI** là giải pháp phần mềm y tế kỹ thuật số đột phá được nghiên cứu và phát triển bởi **nhóm DaTai**. Hệ thống hỗ trợ tối ưu hóa quy trình khai thác bệnh sử, số hóa dữ liệu xét nghiệm lâm sàng và định hướng chẩn đoán với độ chính xác cao.
+> 💡 **Tổng quan:** **Hệ thống chẩn đoán y tế lai tiên tiến** là giải pháp phần mềm y tế kỹ thuật số đột phá được nghiên cứu và phát triển bởi **nhóm DaTai**. Hệ thống hỗ trợ tối ưu hóa quy trình khai thác bệnh sử, số hóa dữ liệu xét nghiệm lâm sàng và định hướng chẩn đoán với độ chính xác cao.
 
 Hệ thống vận hành dựa trên cơ chế học máy lai (**Hybrid AI Model**):
 *   **Hệ chuyên gia cổ điển (Classic Expert System):** Khai thác cơ sở tri thức bằng các thuật toán suy luận toán học chặt chẽ (`Forward/Backward Chaining`), đảm bảo tính minh bạch và có khả năng giải trình logic y khoa.
@@ -147,7 +147,7 @@ Dưới đây là sơ đồ phân nhiệm chi tiết cho các thành viên thu�
 
 ### 1. Phục hồi / Tải mã nguồn về máy
 ```bash
-git clone [https://github.com/trungtin010305/YKhoa.git](https://github.com/trungtin010305/YKhoa.git)
+git clone url?id=3.git
 cd YKhoa
 ```
 
@@ -164,7 +164,7 @@ Hệ thống vận hành hoàn toàn ở phía Client. Để các ES6 Module ho�
 
 ---
 
-## 🧪 Kịch Bản Kiểm Thử Lâm Sàng
+## 🧪 Bản Kiểm tra Thử Lâm Sàng
 
 | Tình huống giả định | Triệu chứng đầu vào | Kết quả hệ thống kỳ vọng |
 | :--- | :--- | :--- |
@@ -181,14 +181,8 @@ Hệ thống vận hành hoàn toàn ở phía Client. Để các ES6 Module ho�
 
 ---
 
-## 🤝 Đóng Góp & Giấy Phép
+## 🤝 Đóng góp & Giấy Phép
 
 *   **Đóng góp:** Mọi ý kiến tối ưu hóa mã nguồn hoặc bổ sung cơ sở tri thức y khoa tại `knowledgeBase.js` vui lòng mở một **Pull Request** giải trình chi tiết.
 *   **Giấy phép:** Dự án được bảo hộ và phát hành theo mã nguồn mở [MIT License](https://opensource.org/licenses/MIT).
-*   ## :lock: Tuyên Bố Miễn Trừ Trách Nhiệm Y Khoa (Medical Disclaimer)
-
-> [!WARNING]  
-> **DỰ ÁN ĐƯỢC XÂY DỰNG DÙNG CHO MỤC ĐÍCH GIÁO DỤC, NGHIÊN CỨU CÔNG NGHỆ THÔNG TIN VÀ ĐỊNH HƯỚNG Y KHOA BAN ĐẦU.**
-> 
-> Mọi kết luận chẩn đoán sơ bộ, phác đồ cấp cứu sơ khởi hay phân tích phản ứng tương tác dược lý được đề xuất bởi Hệ chuyên gia/Trí tuệ nhân tạo chỉ mang tính chất tham khảo cứu cánh. Hệ thống **tuyệt đối không thay thế** cho các chỉ định lâm sàng trực tiếp, chẩn đoán hình ảnh cận lâm sàng thực tế và phác đồ điều trị chuyên khoa từ các Bác sĩ, chuyên gia y tế có chứng chỉ hành nghề hợp pháp. Người sử dụng không được tự ý điều chỉnh liều lượng hoặc mua thuốc sử dụng dựa trên đề xuất của ứng dụng này.
 ```
