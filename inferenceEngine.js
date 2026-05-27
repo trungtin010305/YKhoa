@@ -6,17 +6,23 @@ class InferenceEngine {
      * @param {Object} patientProfile { ageGroup, gender, underlyingDisease }
      */
     evaluateOneShot(selectedSymptoms, patientProfile) {
+        // Fallback an toàn nếu patientProfile vô tình bị null hoặc undefined
+        patientProfile = patientProfile || {};
+        selectedSymptoms = selectedSymptoms || [];
+        
         let results = [];
 
         for (let rule of rules) {
             let currentScore = 0;
             let matchingSymptomNames = [];
 
-            // Điểm từ Symptoms
-            for (let [symptomId, weight] of Object.entries(rule.symptoms)) {
-                if (selectedSymptoms.includes(symptomId)) {
-                    currentScore += weight;
-                    matchingSymptomNames.push(allSymptomsMap[symptomId]);
+            // Điểm từ Symptoms - Bảo vệ chống crash nếu bệnh chưa định nghĩa symptom
+            if (rule.symptoms) {
+                for (let [symptomId, weight] of Object.entries(rule.symptoms)) {
+                    if (selectedSymptoms.includes(symptomId)) {
+                        currentScore += weight;
+                        matchingSymptomNames.push(allSymptomsMap[symptomId]);
+                    }
                 }
             }
 
@@ -100,5 +106,52 @@ class InferenceEngine {
 
         // Trả về Top 3 kết quả đáng tin nhất (Trên 10%)
         return results.filter(r => r.certainty >= 10).slice(0, 3);
+    }
+
+    /**
+     * @param {Array} selectedSymptoms Danh sách ID triệu chứng hiện tại
+     * @param {Object} patientProfile
+     * @param {Boolean} forceSkip Nếu true, ép buộc không chạy Backward Chaining
+     */
+    evaluateWithBackwardChaining(selectedSymptoms, patientProfile, forceSkip = false) {
+        patientProfile = patientProfile || {};
+        selectedSymptoms = selectedSymptoms || [];
+        
+        const topResults = this.evaluateOneShot(selectedSymptoms, patientProfile);
+
+        if (!forceSkip && topResults.length > 0) {
+            const topMatch = topResults[0];
+            
+            // Nới rộng vòng kiềm tỏa: Bất kỳ triệu chứng nào ráp ra bệnh (từ 10% đến 99%) đều gọi hỏi vặn
+            if (topMatch.certainty >= 10 && topMatch.certainty <= 99) {
+                // Rút trích các triệu chứng của bệnh này mà bệnh nhân CHƯA chọn
+                let missingSymptoms = [];
+                if (topMatch.rule.symptoms) {
+                    for (let symptomId in topMatch.rule.symptoms) {
+                        if (!selectedSymptoms.includes(symptomId)) {
+                            missingSymptoms.push({
+                                id: symptomId,
+                                label: allSymptomsMap[symptomId] || symptomId
+                            });
+                        }
+                    }
+                }
+
+                // Nếu có triệu chứng thiếu để hỏi, bật cờ backward
+                if (missingSymptoms.length > 0) {
+                    return {
+                        mode: 'backward',
+                        suspectedDisease: topMatch.rule.disease,
+                        missingSymptoms: missingSymptoms
+                    };
+                }
+            }
+        }
+
+        // Trả về báo cáo Forward thông thường
+        return {
+            mode: 'forward',
+            results: topResults
+        };
     }
 }

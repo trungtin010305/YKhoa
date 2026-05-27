@@ -2,10 +2,51 @@ document.addEventListener('DOMContentLoaded', () => {
     let engine;
     let patientData = {};
     let topDiagnosisContext = null;
-    let savedHistory = JSON.parse(localStorage.getItem('patientHistory')) || [];
+    let savedHistory = [];
+    try {
+        savedHistory = JSON.parse(localStorage.getItem('patientHistory')) || [];
+    } catch(e) {
+        console.warn("Storage access restricted. History not loaded.");
+    }
     
     // Lưu các biến của Cận lâm sàng AI Hình Ảnh sinh ra
     let paraclinicalSymptomFound = null; 
+    let cnnModel = null;
+
+    // -- V13: TOAST NOTIFICATION SYSTEM --
+    function showToast(type, title, message) {
+        const container = document.getElementById('toast-container');
+        if (!container) return;
+        
+        // Chống hiển thị spam ngập màn hình
+        const currentToasts = container.querySelectorAll('.toast');
+        if (currentToasts.length >= 3) {
+            currentToasts[0].remove();
+        }
+        
+        const toast = document.createElement('div');
+        toast.className = `toast toast-${type}`;
+        
+        let iconSvg = '';
+        if (type === 'error') iconSvg = '<svg viewBox="0 0 24 24" width="24" height="24" stroke="#ef4444" stroke-width="2" fill="none"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>';
+        else if (type === 'success') iconSvg = '<svg viewBox="0 0 24 24" width="24" height="24" stroke="#10b981" stroke-width="2" fill="none"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>';
+        else iconSvg = '<svg viewBox="0 0 24 24" width="24" height="24" stroke="#f59e0b" stroke-width="2" fill="none"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>';
+
+        toast.innerHTML = `
+            <div class="toast-icon">${iconSvg}</div>
+            <div class="toast-content">
+                <div class="toast-title">${title}</div>
+                <div class="toast-message">${message}</div>
+            </div>
+        `;
+        
+        container.appendChild(toast);
+        
+        setTimeout(() => {
+            toast.classList.add('hiding');
+            toast.addEventListener('animationend', () => toast.remove());
+        }, 5000);
+    }
 
     // DOM Cột Trái (Sidebar Navigation)
     const navSymptomsContainer = document.getElementById('nav-symptoms');
@@ -34,10 +75,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const CRITICAL_DISEASES = ['heart_attack', 'hypertension_urgency', 'stroke', 'kidney_failure', 'breast_cancer', 'colon_cancer', 'hfm_disease', 'pneumonia'];
 
-    function init() {
+    async function init() {
         paraclinicalSymptomFound = null;
         buildTabSystem();
         bindGlobalNavLinks();
+        
+        await loadCNNModel();
         
         const btnApiSettings = document.getElementById('btn-api-settings');
         if (btnApiSettings) {
@@ -46,12 +89,38 @@ document.addEventListener('DOMContentLoaded', () => {
                 const newKey = prompt('CẤU HÌNH API LLM OFFLINE\n\nVui lòng dán khóa Google Gemini API Key tại đây:', currentKey);
                 if (newKey !== null && newKey.trim() !== '') {
                     localStorage.setItem('geminiApiKey', newKey.trim());
-                    alert('Lưu API Key thành công!');
+                    showToast('success', 'Kết nối AI API Thành Công', 'Lưu Khóa Hệ Thống Thành Công!');
                 }
             });
         }
         
         renderEMRTable();
+    }
+
+    async function loadCNNModel() {
+        try {
+            const aiScanLog = document.getElementById('ai-scan-log');
+            if(aiScanLog) {
+                aiScanLog.innerText = 'Đang tải mô hình CNN (MobileNet)...';
+                aiScanLog.className = 'scan-log-text';
+            }
+            
+            // Tải mô hình mobilenet từ tfjs
+            cnnModel = await mobilenet.load();
+            console.log("MobileNet CNN model loaded successfully");
+            
+            if(aiScanLog) {
+                aiScanLog.innerText = 'Mô hình CNN (MobileNet) đã sẵn sàng. Tải ảnh lên để quét.';
+                aiScanLog.classList.add('success');
+            }
+        } catch (error) {
+            console.error("Lỗi khi tải mô hình CNN:", error);
+            const aiScanLog = document.getElementById('ai-scan-log');
+            if(aiScanLog) {
+                aiScanLog.innerText = 'Lỗi tải mô hình CNN. Vui lòng kiểm tra kết nối mạng.';
+                aiScanLog.className = 'scan-log-text error';
+            }
+        }
     }
 
     // -- V11: TÍNH NĂNG VOICE RECOGNITION --
@@ -136,7 +205,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const btnExportCSV = document.getElementById('btn-export-csv');
     if(btnExportCSV) {
         btnExportCSV.addEventListener('click', () => {
-            if(savedHistory.length === 0) return alert('Chưa có dữ liệu bệnh án nào để xuất.');
+            if(savedHistory.length === 0) return showToast('warning', 'Sổ Bệnh Án Trống', 'Chưa có hồ sơ bệnh án nào để xuất CSV.');
             let csvContent = "data:text/csv;charset=utf-8,\uFEFF";
             csvContent += "Ngày Khám,Mã Bệnh Nhân,Họ Và Tên,Chẩn Đoán Sơ Bộ,Mức Độ Khớp\r\n";
             savedHistory.forEach(record => {
@@ -232,7 +301,14 @@ document.addEventListener('DOMContentLoaded', () => {
                 
                 const spanTxt = document.createElement('span');
                 spanTxt.className = 'checkbox-label';
-                spanTxt.innerText = sym.label;
+                
+                if (sym.desc) {
+                    spanTxt.innerHTML = `<div style="font-weight: 600; color: var(--text-dark);">${sym.label}</div><div style="font-size: 0.85rem; color: #64748b; font-weight: 400; margin-top: 4px; line-height: 1.4;">${sym.desc}</div>`;
+                    labelWrap.style.alignItems = 'flex-start';
+                    inputChk.style.marginTop = '4px';
+                } else {
+                    spanTxt.innerText = sym.label;
+                }
 
                 labelWrap.appendChild(inputChk);
                 labelWrap.appendChild(spanTxt);
@@ -297,10 +373,16 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    // 4. Scanner Mô Phỏng
-    btnScan.addEventListener('click', () => {
+    // 4. CNN Image Recognition (Sử dụng TensorFlow.js + MobileNet)
+    btnScan.addEventListener('click', async () => {
+        if (!cnnModel) {
+            aiScanLog.innerText = 'Mô hình CNN chưa được tải xong. Vui lòng chờ...';
+            aiScanLog.className = 'scan-log-text error';
+            return;
+        }
+
         btnScan.disabled = true; 
-        aiScanLog.innerText = 'Bắt đầu dùng AI Machine Vision nhận diện...';
+        aiScanLog.innerText = 'Bắt đầu dùng mô hình CNN phân tích hình ảnh...';
         aiScanLog.className = 'scan-log-text';
 
         scannerLaser.classList.remove('hidden');
@@ -308,20 +390,34 @@ document.addEventListener('DOMContentLoaded', () => {
         void scannerLaser.offsetWidth; 
         scannerLaser.classList.add('anim-sweep');
 
-        setTimeout(() => {
+        try {
+            // Đưa ảnh vào mô hình MobileNet để dự đoán
+            const predictions = await cnnModel.classify(imagePreview);
             scannerLaser.classList.add('hidden');
-            let modelId = aiModelType.value; 
-            paraclinicalSymptomFound = modelId; 
             
-            let findingText = '';
-            if(modelId === 'xray_lung_opacity') findingText = 'Có tổn thương rọi bóng mờ nhu mô phổi.';
-            if(modelId === 'scan_skin_lesion') findingText = 'Xuất hiện hồng ban rộp da bọng nước.';
-            if(modelId === 'scan_tumor_mass') findingText = 'Tân sinh khôi u mô sụn mờ ác tính.';
-
-            aiScanLog.innerText = `[KẾT QUẢ QUÉT]: ${findingText} Đã nạp thành công vào Hồ Sơ.`;
-            aiScanLog.classList.add('success');
-            
-        }, 2000); 
+            if (predictions && predictions.length > 0) {
+                const topPrediction = predictions[0];
+                const className = topPrediction.className;
+                const probability = (topPrediction.probability * 100).toFixed(2);
+                
+                aiScanLog.innerText = `[KẾT QUẢ CNN]: Nhận diện "${className}" (Độ tin cậy: ${probability}%). Đã nạp dữ liệu vào Hệ thống.`;
+                aiScanLog.classList.add('success');
+                
+                // (DEMO MOCK) Ánh xạ kết quả CNN sang mã bệnh lý của hệ thống dựa vào Select Box
+                let modelId = aiModelType.value; 
+                paraclinicalSymptomFound = modelId;
+            } else {
+                aiScanLog.innerText = '[KẾT QUẢ CNN]: Không nhận diện được đối tượng rõ ràng.';
+                aiScanLog.classList.add('warning');
+            }
+        } catch (error) {
+            console.error("CNN Error:", error);
+            scannerLaser.classList.add('hidden');
+            aiScanLog.innerText = 'Lỗi trong quá trình quét CNN: ' + error.message;
+            aiScanLog.classList.add('error');
+        }
+        
+        btnScan.disabled = false;
     });
 
 
@@ -340,15 +436,16 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         // 5.3. Sinh hiệu
-        let sysBP = parseInt(docVitalBp.value);
+        let sysBP = docVitalBp ? parseInt(docVitalBp.value) : NaN;
         if (!isNaN(sysBP) && sysBP > 140) selectedSymptomsArray.push('high_blood_pressure');
 
-        let sysBSugar = parseInt(docVitalBs.value);
+        let sysBSugar = docVitalBs ? parseInt(docVitalBs.value) : NaN;
         if (!isNaN(sysBSugar) && sysBSugar > 126) selectedSymptomsArray.push('high_blood_sugar');
 
         // ==== 5.4. LÕI NLP AI BẢN QUYỀN (GEMINI API) ====
         const apiKey = localStorage.getItem('geminiApiKey') || '';
-        const nlpText = document.getElementById('nlp-text').value.trim();
+        const nlpTextInput = document.getElementById('nlp-text');
+        const nlpText = nlpTextInput ? nlpTextInput.value.trim() : '';
         
         if (nlpText.length > 5) {
             btnAnalyze.innerText = 'ĐANG GỌI API GEMINI...';
@@ -370,26 +467,28 @@ document.addEventListener('DOMContentLoaded', () => {
                     const data = await response.json();
                     
                     if (!response.ok) {
-                        alert('API Key lỗi: ' + (data.error ? data.error.message : 'Invalid API Key'));
+                        showToast('error', 'Lỗi Kết Nối AI', 'Hãy kiểm tra lại API Key: ' + (data?.error ? data.error.message : 'Invalid API Key'));
                         btnAnalyze.innerText = 'XÁC NHẬN CHẨN ĐOÁN';
                         btnAnalyze.disabled = false;
                         return;
                     }
 
-                    if (data.candidates && data.candidates.length > 0) {
+                    if (data?.candidates && data.candidates.length > 0) {
                         try {
-                            let resultText = data.candidates[0].content.parts[0].text;
-                            // Clean up Markdown backticks if any
-                            resultText = resultText.replace(/```json/g, '').replace(/```/g, '').trim();
-                            
-                            const aiMatchedArray = JSON.parse(resultText);
-                            if(Array.isArray(aiMatchedArray)) {
-                                selectedSymptomsArray = selectedSymptomsArray.concat(aiMatchedArray);
+                            let resultText = data.candidates[0]?.content?.parts?.[0]?.text;
+                            if (resultText) {
+                                // Clean up Markdown backticks if any
+                                resultText = resultText.replace(/```json/g, '').replace(/```/g, '').trim();
+                                
+                                const aiMatchedArray = JSON.parse(resultText);
+                                if(Array.isArray(aiMatchedArray)) {
+                                    selectedSymptomsArray = selectedSymptomsArray.concat(aiMatchedArray);
+                                }
                             }
                         } catch(e) { console.error("JSON parse LLM error", e); }
                     }
                 } catch(error) {
-                    alert('Lỗi Cấp Mạng: Không thể kết nối tới Google API.');
+                    showToast('error', 'Mất Kết Nối Máy Chủ', 'Không thể khởi động kết nối tới Hạ tầng Google API. Hãy thử lại.');
                     btnAnalyze.innerText = 'XÁC NHẬN CHẨN ĐOÁN';
                     btnAnalyze.disabled = false;
                     return;
@@ -413,7 +512,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (selectedSymptomsArray.length === 0) {
             btnAnalyze.innerText = 'XÁC NHẬN CHẨN ĐOÁN';
             btnAnalyze.disabled = false;
-            alert('Cảnh báo: Không thể trích xuất được triệu chứng từ văn bản của bạn. Hãy ghi từ khóa cụ thể hơn như "Sốt, Ho khan", hoặc bạn chưa tích ô nào cả!');
+            showToast('warning', 'Thiếu Dữ Kiện Lâm Sàng', 'Bạn chưa tick chọn bất kỳ triệu chứng nào. Vui lòng khai báo ít nhất 1 biểu hiện.');
             return;
         }
 
@@ -427,12 +526,80 @@ document.addEventListener('DOMContentLoaded', () => {
         };
 
         engine = new InferenceEngine();
-        const topResults = engine.evaluateOneShot(selectedSymptomsArray, patientData);
+        
+        // Cốt lõi: Gọi Backward Chaining
+        const bcCheck = engine.evaluateWithBackwardChaining(selectedSymptomsArray, patientData);
+        
+        if (bcCheck.mode === 'backward') {
+            // Nghi ngờ, cần hiển thị Modal hỏi thêm
+            const modal = document.getElementById('backward-modal');
+            document.getElementById('bc-disease-name').innerText = bcCheck.suspectedDisease;
+            
+            const checkboxContainer = document.getElementById('bc-checkboxes');
+            checkboxContainer.innerHTML = '';
+            
+            bcCheck.missingSymptoms.forEach(sym => {
+                const labelWrap = document.createElement('label');
+                labelWrap.className = 'custom-checkbox-wrapper';
+                
+                const inputChk = document.createElement('input');
+                inputChk.type = 'checkbox';
+                inputChk.value = sym.id;
+                inputChk.classList.add('bc-missing-chk');
+                
+                const spanTxt = document.createElement('span');
+                spanTxt.className = 'checkbox-label';
+                spanTxt.innerText = sym.label;
 
-        // Render ra HTML Cột thẻ Báo cáo
+                labelWrap.appendChild(inputChk);
+                labelWrap.appendChild(spanTxt);
+
+                checkboxContainer.appendChild(labelWrap);
+            });
+            
+            modal.classList.remove('hidden');
+            // Trigger animation frame
+            void modal.offsetWidth;
+            modal.classList.add('active');
+
+            const btnSkip = document.getElementById('btn-bc-skip');
+            const btnSubmit = document.getElementById('btn-bc-submit');
+            
+            // Xóa listener cũ (nếu có bấm phân tích nhiều lần) bằng cách nhân bản node
+            const newBtnSkip = btnSkip.cloneNode(true);
+            btnSkip.parentNode.replaceChild(newBtnSkip, btnSkip);
+            const newBtnSubmit = btnSubmit.cloneNode(true);
+            btnSubmit.parentNode.replaceChild(newBtnSubmit, btnSubmit);
+            
+            newBtnSkip.addEventListener('click', () => {
+                modal.classList.remove('active');
+                setTimeout(() => modal.classList.add('hidden'), 300);
+                
+                const finalResults = engine.evaluateWithBackwardChaining(selectedSymptomsArray, patientData, true);
+                showFinalResults(finalResults.results);
+            });
+            
+            newBtnSubmit.addEventListener('click', () => {
+                modal.classList.remove('active');
+                setTimeout(() => modal.classList.add('hidden'), 300);
+                
+                document.querySelectorAll('.bc-missing-chk:checked').forEach(chk => {
+                    selectedSymptomsArray.push(chk.value);
+                });
+                
+                const finalResults = engine.evaluateWithBackwardChaining(selectedSymptomsArray, patientData, true);
+                showFinalResults(finalResults.results);
+            });
+            
+        } else {
+            // Thông thường
+            showFinalResults(bcCheck.results);
+        }
+    });
+
+    function showFinalResults(topResults) {
         renderReports(topResults);
         
-        // Auto bẻ luồng sang mở Tab Results
         document.querySelectorAll('.tab-pane').forEach(p => {
             p.classList.remove('active');
             p.classList.add('hidden');
@@ -440,7 +607,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const resultsPane = document.getElementById('pane-results');
         resultsPane.classList.add('active');
         resultsPane.classList.remove('hidden');
-    });
+    }
 
     function renderReports(topResults) {
         aiResultsContainer.innerHTML = '';
@@ -521,7 +688,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 // In Ra Các Triệu chứng Đã Chọn Khớp Dữ Liệu
                 const matchedSymptomsHtml = `
-                    <div style="background: #f1f5f9; padding: 12px; border-left: 3px solid #0284c7; margin-bottom: 20px; border-radius: 4px;">
+                    <div class="matched-symptoms-box" style="background: #f1f5f9; padding: 12px; border-left: 3px solid #0284c7; margin-bottom: 20px; border-radius: 4px;">
                         <h4 style="font-size: 0.85rem; color:#0369a1; margin-bottom: 8px;">THẺ BẰNG CHỨNG (Triệu chứng / Cận Lâm Sàng):</h4>
                         <p style="font-size: 0.95rem; margin:0; color:#334155; font-weight:500;">🔹 ${res.matchedSymptomsText}</p>
                     </div>
@@ -564,6 +731,12 @@ document.addEventListener('DOMContentLoaded', () => {
                 `;
                 aiResultsContainer.appendChild(card);
             });
+            
+            // Hiện các nút chức năng 4, 5, 6
+            const btnContainer = document.getElementById('action-buttons-container');
+            if (btnContainer) {
+                btnContainer.classList.remove('hidden');
+            }
         }
     }
 
@@ -599,6 +772,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
             chatHistory.innerHTML += `<div class="chat-bubble chat-bot" id="bot-typing"><span style="color:#64748b;">AI Đang gõ phím...</span></div>`;
             chatHistory.scrollTop = chatHistory.scrollHeight;
+            
+            // Khóa nút gửi tránh spam request API
+            btnChatSend.disabled = true;
 
             try {
                 const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`, {
@@ -607,19 +783,22 @@ document.addEventListener('DOMContentLoaded', () => {
                     body: JSON.stringify({ contents: [{ parts: [{ text: systemPrompt }] }] })
                 });
                 const data = await res.json();
-                document.getElementById('bot-typing').remove();
+                const typingEl = document.getElementById('bot-typing');
+                if (typingEl) typingEl.remove();
                 
-                if(data.candidates && data.candidates[0].content.parts[0].text) {
+                if(data?.candidates && data.candidates[0]?.content?.parts?.[0]?.text) {
                     let aiMsg = data.candidates[0].content.parts[0].text;
                     aiMsg = aiMsg.replace(/\n/g, '<br>');
                     chatHistory.innerHTML += `<div class="chat-bubble chat-bot"><strong>Bác Sĩ AI:</strong> ${aiMsg}</div>`;
                 } else {
-                    chatHistory.innerHTML += `<div class="chat-bubble chat-bot">Lỗi phản hồi tử Google AI.</div>`;
+                    chatHistory.innerHTML += `<div class="chat-bubble chat-bot">Lỗi phản hồi từ Google AI hoặc dữ liệu trống.</div>`;
                 }
             } catch(e) {
-                if(document.getElementById('bot-typing')) document.getElementById('bot-typing').remove();
+                const typingEl = document.getElementById('bot-typing');
+                if(typingEl) typingEl.remove();
                 chatHistory.innerHTML += `<div class="chat-bubble chat-bot chat-alert">Kết nối API gián đoạn. Không phản hồi.</div>`;
             }
+            btnChatSend.disabled = false;
             chatHistory.scrollTop = chatHistory.scrollHeight;
         });
         
@@ -649,6 +828,184 @@ document.addEventListener('DOMContentLoaded', () => {
         closeChatBtn.addEventListener('click', () => {
             chatbotContainer.classList.add('hidden');
             chatbotContainer.style.display = 'none';
+        });
+    }
+
+    // --- MOCK FEATURES MỚI ---
+
+    // 1. Phân Tích Kết Quả Xét Nghiệm (Lab Test OCR & NLP)
+    const labUpload = document.getElementById('lab-upload');
+    const labFileName = document.getElementById('lab-file-name');
+    const labResultsBox = document.getElementById('lab-results-box');
+    const labResultsTbody = document.getElementById('lab-results-tbody');
+    const labAiAdvice = document.getElementById('lab-ai-advice');
+
+    if (labUpload) {
+        labUpload.addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            if (file) {
+                labFileName.innerText = `Đã chọn: ${file.name} - Đang phân tích bằng AI...`;
+                labFileName.style.color = '#3b82f6';
+                
+                // Giả lập thời gian load AI
+                setTimeout(() => {
+                    labFileName.innerText = `Đã phân tích xong: ${file.name}`;
+                    labFileName.style.color = '#10b981';
+                    labResultsBox.classList.remove('hidden');
+                    
+                    // Tạo dữ liệu giả (Mock data)
+                    const mockResults = [
+                        { index: 'Glucose (Đường Huyết)', value: '6.8 mmol/L', range: '3.9 - 6.1 mmol/L', status: 'high' },
+                        { index: 'Cholesterol Toàn Phần', value: '5.2 mmol/L', range: '< 5.18 mmol/L', status: 'high' },
+                        { index: 'WBC (Bạch Cầu)', value: '7.5 G/L', range: '4.0 - 10.0 G/L', status: 'normal' },
+                        { index: 'RBC (Hồng Cầu)', value: '4.8 T/L', range: '4.0 - 5.8 T/L', status: 'normal' }
+                    ];
+                    
+                    labResultsTbody.innerHTML = '';
+                    mockResults.forEach(item => {
+                        const tr = document.createElement('tr');
+                        const statusHtml = item.status === 'high' 
+                            ? '<span class="badge badge-warning" style="background:#fee2e2; color:#ef4444;">Cao Bất Thường</span>' 
+                            : '<span class="badge badge-blue" style="background:#d1fae5; color:#10b981;">Bình Thường</span>';
+                        
+                        tr.innerHTML = `
+                            <td style="font-weight:600;">${item.index}</td>
+                            <td style="${item.status === 'high' ? 'color:#ef4444; font-weight:700;' : ''}">${item.value}</td>
+                            <td style="color:#64748b;">${item.range}</td>
+                            <td>${statusHtml}</td>
+                        `;
+                        labResultsTbody.appendChild(tr);
+                    });
+                    
+                    labAiAdvice.innerText = "Chỉ số Đường Huyết và Cholesterol có dấu hiệu vượt ngưỡng an toàn. Hệ thống đã đánh dấu cảnh báo. Mời bạn tiếp tục nhập liệu các triệu chứng lâm sàng ở phần menu để AI tổng hợp chẩn đoán cuối cùng.";
+                    
+                    showToast('success', 'Trích Xuất Thành Công', 'Dữ liệu xét nghiệm đã được AI số hóa.');
+                }, 2500);
+            }
+        });
+    }
+
+    // 2. Hệ Thống Kiểm Tra Tương Tác Thuốc
+    const btnCheckDrug = document.getElementById('btn-check-drug');
+    const inputMedications = document.getElementById('p-medications');
+    const drugResult = document.getElementById('drug-interaction-result');
+
+    if (btnCheckDrug && inputMedications && drugResult) {
+        btnCheckDrug.addEventListener('click', () => {
+            const meds = inputMedications.value.trim().toLowerCase();
+            drugResult.style.display = 'block';
+            
+            if (!meds) {
+                drugResult.style.color = '#f59e0b';
+                drugResult.innerText = 'Vui lòng nhập tên thuốc để kiểm tra.';
+                return;
+            }
+
+            btnCheckDrug.innerText = 'Đang kiểm tra...';
+            btnCheckDrug.disabled = true;
+
+            setTimeout(() => {
+                if (meds.includes('corticoid') && meds.includes('nsaid')) {
+                    drugResult.style.color = '#ef4444';
+                    drugResult.innerHTML = '⚠️ <strong>Cảnh Báo Chống Chỉ Định:</strong> Phát hiện tương tác nguy hiểm giữa Corticoid và NSAID (nguy cơ viêm loét, xuất huyết dạ dày).';
+                } else if (meds.includes('paracetamol') && meds.includes('rượu')) {
+                    drugResult.style.color = '#ef4444';
+                    drugResult.innerHTML = '⚠️ <strong>Cảnh Báo Chống Chỉ Định:</strong> Paracetamol tương tác với cồn có thể gây ngộ độc gan cấp tính.';
+                } else {
+                    drugResult.style.color = '#10b981';
+                    drugResult.innerHTML = '✅ <strong>An Toàn:</strong> AI không phát hiện tương tác nguy hiểm nào trong danh sách thuốc bạn cung cấp.';
+                }
+                
+                btnCheckDrug.innerText = 'Kiểm Tra Tương Tác';
+                btnCheckDrug.disabled = false;
+            }, 1500);
+        });
+    }
+
+    // 3. Tính Năng Đồng Bộ Thiết Bị Đeo (Wearables Sync)
+    const btnSyncWatch = document.getElementById('btn-sync-watch');
+    if (btnSyncWatch) {
+        btnSyncWatch.addEventListener('click', () => {
+            const originalText = btnSyncWatch.innerHTML;
+            btnSyncWatch.innerHTML = `<svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2" fill="none" class="spin"><path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.5-11l5.67-5.67"></path></svg> Đang tải dữ liệu...`;
+            btnSyncWatch.disabled = true;
+
+            setTimeout(() => {
+                document.getElementById('vitals-bp').value = 125;
+                document.getElementById('vitals-bs').value = 92;
+                document.getElementById('vitals-hr').value = 82;
+                document.getElementById('vitals-spo2').value = 98;
+                
+                showToast('success', 'Đồng Bộ Hoàn Tất', 'Đã lấy dữ liệu sinh hiệu từ thiết bị thành công!');
+                btnSyncWatch.innerHTML = originalText;
+                btnSyncWatch.disabled = false;
+            }, 2000);
+        });
+    }
+
+    // 4. Modal Follow Up & Adherence
+    const btnFollowUp = document.getElementById('btn-follow-up');
+    const modalFollowUp = document.getElementById('follow-up-modal');
+    const btnCloseFollowUp = document.getElementById('btn-close-followup');
+    const smsToggle = document.getElementById('sms-toggle');
+
+    if (btnFollowUp && modalFollowUp) {
+        btnFollowUp.addEventListener('click', () => {
+            modalFollowUp.classList.remove('hidden');
+        });
+        
+        btnCloseFollowUp.addEventListener('click', () => {
+            modalFollowUp.classList.add('hidden');
+            if (smsToggle.checked) {
+                showToast('success', 'Đã Đăng Ký Nhắc Nhở', 'Hệ thống sẽ gửi SMS nhắc uống thuốc hàng ngày.');
+            }
+        });
+    }
+
+    // 5. Modal Telemedicine (Video Call)
+    const btnTelemedicine = document.getElementById('btn-telemedicine');
+    const modalTelemed = document.getElementById('telemed-modal');
+    const btnCloseTelemed = document.getElementById('btn-close-telemed');
+    const btnEndCall = document.getElementById('btn-end-call');
+
+    if (btnTelemedicine && modalTelemed) {
+        btnTelemedicine.addEventListener('click', () => {
+            modalTelemed.classList.remove('hidden');
+        });
+        
+        const closeTelemed = () => {
+            modalTelemed.classList.add('hidden');
+            showToast('success', 'Kết Thúc Gọi', 'Cuộc gọi từ xa đã kết thúc an toàn.');
+        };
+        btnCloseTelemed.addEventListener('click', closeTelemed);
+        btnEndCall.addEventListener('click', closeTelemed);
+    }
+
+    // 6. Modal Decision Tree (Sơ Đồ Tư Duy)
+    const btnViewTree = document.getElementById('btn-view-tree');
+    const modalTree = document.getElementById('tree-modal');
+    const btnCloseTree = document.getElementById('btn-close-tree');
+    const treeFinalDisease = document.getElementById('tree-final-disease');
+
+    if (btnViewTree && modalTree) {
+        btnViewTree.addEventListener('click', () => {
+            if (topDiagnosisContext) {
+                treeFinalDisease.innerText = topDiagnosisContext.rule.disease;
+                if (topDiagnosisContext.certainty >= 75) {
+                    treeFinalDisease.style.background = '#fee2e2';
+                    treeFinalDisease.style.color = '#b91c1c';
+                    treeFinalDisease.style.borderColor = '#fca5a5';
+                } else {
+                    treeFinalDisease.style.background = '#d1fae5';
+                    treeFinalDisease.style.color = '#047857';
+                    treeFinalDisease.style.borderColor = '#a7f3d0';
+                }
+            }
+            modalTree.classList.remove('hidden');
+        });
+        
+        btnCloseTree.addEventListener('click', () => {
+            modalTree.classList.add('hidden');
         });
     }
 
