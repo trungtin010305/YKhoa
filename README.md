@@ -81,5 +81,8 @@ Dự án được xây dựng thuần túy bằng HTML/CSS/JS không phụ thu�
 *Hệ thống này được phát triển cho mục đích giáo dục, nghiên cứu công nghệ và hỗ trợ định hướng sơ bộ. Mọi thông tin chẩn đoán, phác đồ điều trị và cảnh báo thuốc từ AI chỉ mang tính chất tham khảo và **không thay thế** cho ý kiến chuyên môn, chẩn đoán hay chỉ định y khoa từ bác sĩ có chứng chỉ hành nghề.*
 
 ---
+hello bro buổi tối vui vẻ 
+:))))))))))))))))))))))
+))))))))))))))))))))))
 
 Chúc bạn có những trải nghiệm tuyệt vời với ứng dụng! Nếu thấy dự án hữu ích, hãy tặng **1 ⭐ Star** trên Github nhé! 💖
