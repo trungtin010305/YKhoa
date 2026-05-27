@@ -49,7 +49,7 @@ Dưới đây là cấu trúc trực quan của bảng điều khiển thông mi
 
 ---
 
-## 🛠️ Kiến Trúc Hệ Thống
+## 🛠️ Kiến Trúc Hệ thống
 
 Để đảm bảo tính toàn vẹn và bảo mật dữ liệu y tế nhạy cảm, hệ thống áp dụng nguyên lý **Separation of Concerns (SoC)** và thực thi toán học cục bộ (**Edge Inference**) trực tiếp ở phía Client.
 
@@ -90,11 +90,11 @@ graph TD
 
 Hệ thống chuyển đổi các chỉ số lâm sàng thu thập được thành các vector logic dựa trên bảng phân loại y khoa tích hợp sẵn:
 
-| Chỉ số sinh hiệu | Ngưỡng bình thường | Ngưỡng nguy cơ (Cảnh báo số hóa) | Trạng thái hệ thống |
+| Chỉ số sinh hiệu | Ngưỡng bình thường | Ngưỡng nguy cơ (Cảnh báo số hóa) | hệ thống Trạng Trạng thái |
 | :--- | :--- | :--- | :--- |
 | **Thân nhiệt** | $36.5^\circ\text{C} - 37.5^\circ\text{C}$ | $<35^\circ\text{C}$ hoặc $>38.5^\circ\text{C}$ | 🚨 `FEVER_ALERT` |
 | **Nồng độ SpO2** | $96\% - 100\%$ | $\le 94\%$ | 🚑 `HYPOXIA_CRITICAL` |
-| **Huyết áp tâm thu**| $90\text{ mmHg} - 120\text{ mmHg}$ | $<90\text{ mmHg}$ hoặc $>140\text{ mmHg}$ | ⚠️ `BP_ANOMALY` |
+| **Huyết áp tâm thu**| $90\text{ mmHg} - 120\text{ mmHg}$ | $<90\text{ mmHg}$ hoặc $>140\text{ mmHg}$ | ⚠️ `BP_ANOMALY` | 
 
 ---
 
