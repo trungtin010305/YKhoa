@@ -73,6 +73,20 @@ graph TD
 
 ---
 
+## 👥 Bảng Phân Công Nhiệm Vụ Thành Viên (Team Responsibility)
+
+Dưới đây là sơ đồ phân nhiệm chi tiết cho các thành viên thuộc **nhóm DaTai** trong suốt vòng đời phát triển dự án:
+
+| Thành viên | Vai trò chính | Nhiệm vụ cụ thể | Minh chứng mã nguồn |
+| :--- | :--- | :--- | :--- |
+| **Nguyễn Trung Tín (Nhóm Trưởng)** | **Backend & AI Engineer** | - Thiết kế thuật toán suy luận `Forward/Backward Chaining`. <br> - Xây dựng công thức tính trọng số điểm tin cậy ($CF$). | `inferenceEngine.js` |
+| **Nguyễn Nhất Linh** | **Knowledge Base Specialist** | - Nghiên cứu định danh danh mục bệnh lý y khoa. <br> - Thiết lập ma trận ánh xạ giữa triệu chứng và ngưỡng sinh hiệu. | `knowledgeBase.js` |
+| **Nguyễn Quốc Khánh** | **Frontend Developer** | - Phát triển giao diện người dùng theo phong cách **Glassmorphism**. <br> - Tối ưu hóa UI/UX responsive đa nền tảng. | `index.html`, `style.css` |
+| **Phạm Nguyễn Tấn Đạt** | **Integrator & NLP Specialist** | - Tích hợp luồng điều phối ứng dụng. <br> - Thiết kế hệ thống prompt-engineering kết nối cấu trúc `Gemini API`. | `app.js` |
+| **Huỳnh Nhựt Hải** | **QA / Tester** | - Lập kịch bản kiểm thử lâm sàng giả định. <br> - Kiểm tra và phát hiện lỗi luồng logic (Edge cases). | `README.md` (Testing Section) |
+
+---
+
 ## 💻 Hướng Dẫn Cài Đặt & Khởi Chạy
 
 ### 1. Sao chép kho lưu trữ
@@ -106,21 +120,11 @@ Hệ thống vận hành hoàn toàn ở phía Client. Để các ES6 Module ho�
 ## 🤝 Đóng Góp & Giấy Phép
 
 *   **Đóng góp:** Mọi ý kiến tối ưu hóa mã nguồn hoặc bổ sung cơ sở tri thức y khoa tại `knowledgeBase.js` vui lòng mở một **Pull Request** giải trình chi tiết.
-*   **Giấy phép:** Dự án được bảo hộ và phát hành theo mã nguồn mở [MIT License](https://github.com/trungtin010305/YKhoa/blob/main/LICENSE).
-## 🔒 Tuyên Bố Miễn Trừ Trách Nhiệm Y Khoa (Medical Disclaimer)
+*   **Giấy phép:** Dự án được bảo hộ và phát hành theo mã nguồn mở [MIT License](https://choosealicense.com/licenses/mit/).
+*   ## :lock: Tuyên Bố Miễn Trừ Trách Nhiệm Y Khoa (Medical Disclaimer)
 
 > [!WARNING]  
 > **DỰ ÁN ĐƯỢC XÂY DỰNG DÙNG CHO MỤC ĐÍCH GIÁO DỤC, NGHIÊN CỨU CÔNG NGHỆ THÔNG TIN VÀ ĐỊNH HƯỚNG Y KHOA BAN ĐẦU.**
 > 
 > Mọi kết luận chẩn đoán sơ bộ, phác đồ cấp cứu sơ khởi hay phân tích phản ứng tương tác dược lý được đề xuất bởi Hệ chuyên gia/Trí tuệ nhân tạo chỉ mang tính chất tham khảo cứu cánh. Hệ thống **tuyệt đối không thay thế** cho các chỉ định lâm sàng trực tiếp, chẩn đoán hình ảnh cận lâm sàng thực tế và phác đồ điều trị chuyên khoa từ các Bác sĩ, chuyên gia y tế có chứng chỉ hành nghề hợp pháp. Người sử dụng không được tự ý điều chỉnh liều lượng hoặc mua thuốc sử dụng dựa trên đề xuất của ứng dụng này.
-
-## 👥 Ban Nghiên Cứu & Phát Triển (Đội Ngũ DaTai)
-
-Dự án được duy trì và nâng cấp bởi các thành viên thuộc nhóm **DaTai**:
-
-| Ảnh Đại Diện | Họ và Tên | Vai Trò Chuyên Môn | Kênh Kết Nối |
-| :---: | :--- | :--- | :--- |
-| <img src="https://images.unsplash.com/photo-1622253692010-333f2da6031d?w=100&auto=format&fit=crop" width="50" style="border-radius:50%;" /> | **Nguyễn Trung Tín** | Trưởng nhóm nghiên cứu / Kiến trúc sư Động cơ Lập luận | [![GitHub](https://img.shields.io/badge/GitHub-181717?style=flat&logo=github)](https://github.com/) |
-| <img src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=100&auto=format&fit=crop" width="50" style="border-radius:50%;" /> | **Nguyễn Nhất linh** | Trưởng nhóm UI/UX / Lập trình hệ thống Glassmorphism | [![GitHub](https://img.shields.io/badge/GitHub-181717?style=flat&logo=github)](https://github.com/) |
-| <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100&auto=format&fit=crop" width="50" style="border-radius:50%;" /> | **Nguyễn Quốc Khánh** | Kỹ sư Trí tuệ Nhân tạo / Tích hợp TensorFlow & Gemini | [![GitHub](https://img.shields.io/badge/GitHub-181717?style=flat&logo=github)](https://github.com/) |
-| <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&auto=format&fit=crop" width="50" style="border-radius:50%;" /> | **Phạm Nguyễn Tấn Đạt** | Kỹ sư Dữ liệu / Trưởng nhóm Số hóa Quy tắc Y học | [![GitHub](https://img.shields.io/badge/GitHub-181717?style=flat&logo=github)](https://github.com/) |
+```
