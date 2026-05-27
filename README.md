@@ -8,7 +8,7 @@ Chào mừng bạn đến với **Hệ Thống Chẩn Đoán Y Khoa AI** - một
 
 ---
 
-## ✨ Các Tính Năng Nổi Bật
+## ✨ Các Tính Năng Nổi Bật123
 
 ### 1. 🗂️ Quản Lý Hồ Sơ Bệnh Án Điện Tử (EMR)
 *   **Định danh Y tế**: Khai báo thông tin bệnh nhân, độ tuổi (Nhi khoa, Thành niên, Lão khoa), giới tính và bệnh lý nền.
