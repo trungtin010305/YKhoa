@@ -147,7 +147,7 @@ Dưới đây là sơ đồ phân nhiệm chi tiết cho các thành viên thu�
 
 ### 1. Phục hồi / Tải mã nguồn về máy
 ```bash
-git clone url?id=3.git
+git clone [https://github.com/trungtin010305/YKhoa.git](https://github.com/trungtin010305/YKhoa.git)
 cd YKhoa
 ```
 
