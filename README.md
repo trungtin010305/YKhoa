@@ -39,3 +39,18 @@ graph TD
     D -->|Suy luận lùi - Backward Chaining| F[Khai thác câu hỏi loại trừ nguy kịch]
     F -.->|Bác sĩ cập nhật phản hồi| D
     E --> G[Báo cáo Chẩn đoán Sơ bộ]
+✨ Tính Năng Cốt Lõi
+🧠 Động Cơ Suy Luận Lai (Inference Engine)
+Suy luận tiến (Forward Chaining): Quét toàn bộ kho dữ liệu tri thức dựa trên các triệu chứng hiện tại để khoanh vùng bệnh lý phù hợp.
+Suy luận lùi (Backward Chaining): Tự động đặt câu hỏi lâm sàng thông minh để xác minh hoặc loại trừ chẩn đoán khi phát hiện nguy cơ diễn tiến nặng.
+Điểm số tin cậy (Certainty Factor): Áp dụng công thức định lượng khả năng mắc bệnh:
+$$CF_{combined} = CF_1 + CF_2 \times (1 - CF_1)$$
+🗣️ Trợ Lý Ngôn Ngữ Tự Nhiên Y Khoa
+Tự động biên dịch dữ liệu thô, lời kể không cấu trúc thành cấu trúc Key-Value phù hợp với hệ thống thông qua Gemini 2.5 Flash API.
+⚡ Vận Hành Edge AI Siêu TốcTốc độ phản hồi tức thì ($\approx 0\text{ms}$ độ trễ mạng) nhờ xử lý mô hình cục bộ với TensorFlow.js, cho phép ứng dụng chạy mượt mà ngay cả khi ngoại tuyến
+📂 Cấu Trúc Mã Nguồn
+├── index.html          # Cấu trúc giao diện chính, tối ưu hóa ngữ nghĩa HTML5
+├── style.css           # Ngôn ngữ thiết kế Glassmorphic UI (hiệu ứng kính mờ & responsive)
+├── app.js              # Khởi tạo ứng dụng, quản lý trạng thái và phối hợp API Gemini
+├── inferenceEngine.js  # Bộ lõi logic thuật toán (Forward/Backward Chaining) & tính toán CF
+└── knowledgeBase.js    # Cơ sở dữ liệu tri thức y khoa (Danh mục bệnh học, triệu chứng, sinh hiệu)
