@@ -1,18 +1,16 @@
 # 🩺 Hệ Thống Chẩn Đoán Y Khoa AI
 ### *Advanced Hybrid Medical Diagnosis System*
 
-<p align="center">
-  <img src="[https://citgroup.vn/wp-content/uploads/2025/03/Ung-dung-cong-nghe-tri-tue-nhan-tao-AI-trong-chuan-doan-hinh-anh-y-khoa.jpg](https://citgroup.vn/wp-content/uploads/2025/03/Ung-dung-cong-nghe-tri-tue-nhan-tao-AI-trong-chuan-doan-hinh-anh-y-khoa.jpg)" alt="Ứng dụng công nghệ trí tuệ nhân tạo AI trong chẩn đoán hình ảnh y khoa" width="100%" style="border-radius: 12px;" />
-</p>
+![Ứng dụng công nghệ trí tuệ nhân tạo AI trong chẩn đoán hình ảnh y khoa](https://citgroup.vn/wp-content/uploads/2025/03/Ung-dung-cong-nghe-tri-tue-nhan-tao-AI-trong-chuan-doan-hinh-anh-y-khoa.jpg)
 
 <p align="center">
-  <a href="[https://github.com/trungtin010305/YKhoa](https://github.com/trungtin010305/YKhoa)">
-    <img src="[https://img.shields.io/badge/Version-1.5.0-007acc?style=flat-square&logo=semver](https://img.shields.io/badge/Version-1.5.0-007acc?style=flat-square&logo=semver)" alt="Version" />
+  <a href="https://github.com/trungtin010305/YKhoa">
+    <img src="https://img.shields.io/badge/Version-1.5.0-007acc?style=flat-square&logo=semver" alt="Version" />
   </a>
-  <img src="[https://img.shields.io/badge/JavaScript-ES6%2B-f7df1e?style=flat-square&logo=javascript&logoColor=black](https://img.shields.io/badge/JavaScript-ES6%2B-f7df1e?style=flat-square&logo=javascript&logoColor=black)" alt="JavaScript" />
-  <img src="[https://img.shields.io/badge/TensorFlow.js-4.20-ff6f00?style=flat-square&logo=tensorflow](https://img.shields.io/badge/TensorFlow.js-4.20-ff6f00?style=flat-square&logo=tensorflow)" alt="TensorFlow.js" />
-  <img src="[https://img.shields.io/badge/Gemini_API-2.5_Flash-9b51e0?style=flat-square&logo=google-gemini](https://img.shields.io/badge/Gemini_API-2.5_Flash-9b51e0?style=flat-square&logo=google-gemini)" alt="Gemini API" />
-  <img src="[https://img.shields.io/badge/Design-Glassmorphism-00c6ff?style=flat-square&logo=css3](https://img.shields.io/badge/Design-Glassmorphism-00c6ff?style=flat-square&logo=css3)" alt="Design Glassmorphism" />
+  <img src="https://img.shields.io/badge/JavaScript-ES6%2B-f7df1e?style=flat-square&logo=javascript&logoColor=black" alt="JavaScript" />
+  <img src="https://img.shields.io/badge/TensorFlow.js-4.20-ff6f00?style=flat-square&logo=tensorflow" alt="TensorFlow.js" />
+  <img src="https://img.shields.io/badge/Gemini_API-2.5_Flash-9b51e0?style=flat-square&logo=google-gemini" alt="Gemini API" />
+  <img src="https://img.shields.io/badge/Design-Glassmorphism-00c6ff?style=flat-square&logo=css3" alt="Design Glassmorphism" />
 </p>
 
 ---
