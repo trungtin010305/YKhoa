@@ -185,7 +185,9 @@ Hệ thống vận hành hoàn toàn ở phía Client. Để các ES6 Module ho�
 
 *   **Đóng góp:** Mọi ý kiến tối ưu hóa mã nguồn hoặc bổ sung cơ sở tri thức y khoa tại `knowledgeBase.js` vui lòng mở một **Pull Request** giải trình chi tiết.
 *   **Giấy phép:** Dự án được bảo hộ và phát hành theo mã nguồn mở [MIT License](https://opensource.org/licenses/MIT).
-*   ## :lock: Tuyên Bố Miễn Trừ Trách Nhiệm Y Khoa (Medical Disclaimer)
+  
+  
+  ## :lock: Tuyên Bố Miễn Trừ Trách Nhiệm Y Khoa (Medical Disclaimer)
 
 > [!WARNING]  
 > **DỰ ÁN ĐƯỢC XÂY DỰNG DÙNG CHO MỤC ĐÍCH GIÁO DỤC, NGHIÊN CỨU CÔNG NGHỆ THÔNG TIN VÀ ĐỊNH HƯỚNG Y KHOA BAN ĐẦU.**
