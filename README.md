@@ -131,7 +131,7 @@ Dưới đây là sơ đồ phân nhiệm chi tiết cho các thành viên thu�
 | **Nguyễn Nhất Linh** | - Nghiên cứu định danh danh mục bệnh lý y khoa. <br> - Thiết lập ma trận ánh xạ giữa triệu chứng và ngưỡng sinh hiệu. | `knowledgeBase.js` |
 | **Nguyễn Quốc Khánh** | - Phát triển giao diện người dùng theo phong cách **Glassmorphism**. <br> - Tối ưu hóa UI/UX responsive đa nền tảng. | `index.html`, `style.css` |
 | **Phạm Nguyễn Tấn Đạt** | - Tích hợp luồng điều phối ứng dụng. <br> - Thiết kế hệ thống prompt-engineering kết nối cấu trúc `Gemini API`. | `app.js` |
-| **Huỳnh Nhựt Hải** | -  kịch bản kiểm thử lâm sàng giả định. <br> - Kiểm tra và phát hiện lỗi luồng logic (Edge cases). | `README.md` (Testing Section) |
+| **Huỳnh Nhựt Hải** | - Lập kịch bản kiểm thử lâm sàng giả định. <br> - Kiểm tra và phát hiện lỗi luồng logic (Edge cases). | `README.md` (Testing Section) |
 
 ---
 
