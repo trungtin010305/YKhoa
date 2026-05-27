@@ -4,7 +4,7 @@
 ![Ứng dụng công nghệ trí tuệ nhân tạo AI trong chẩn đoán hình ảnh y khoa](https://citgroup.vn/wp-content/uploads/2025/03/Ung-dung-cong-nghe-tri-tue-nhan-tao-AI-trong-chuan-doan-hinh-anh-y-khoa.jpg)
 
 <p align="center">
-  <a href="https://github.com/trungtin010305/YKhoa">
+  <a href="url?id=3">
     <img src="https://img.shields.io/badge/Version-1.5.0-007acc?style=flat-square&logo=semver" alt="Version" />
   </a>
   <img src="https://img.shields.io/badge/JavaScript-ES6%2B-f7df1e?style=flat-square&logo=javascript&logoColor=black" alt="JavaScript" />
@@ -73,16 +73,16 @@ graph TD
 
 *   **Suy luận tiến (Forward Chaining):** Quét toàn bộ kho dữ liệu tri thức dựa trên các triệu chứng hiện tại để khoanh vùng bệnh lý phù hợp.
 *   **Suy luận lùi (Backward Chaining):** Tự động đặt câu hỏi lâm sàng thông minh để xác minh hoặc loại trừ chẩn đoán khi phát hiện nguy cơ diễn tiến nặng.
-*   **Điểm số tin cậy (Certainty Factor):** Áp dụng công thức định lượng khả năng mắc bệnh:
-    $$CF_{combined} = CF_1 + CF_2 \times (1 - CF_1)$$
+*   **Điểm số tin cậy (Certainty Factor):** Áp dụng công thức định lượng khả năng mắc bệnh lý kết hợp:
+    $$CF_{\text{combined}} = CF_1 + CF_2 \times (1 - CF_1)$$
 
 ### 🗣️ Trợ Lý Ngôn Ngữ Tự Nhiên Y Khoa
 
-*   Tự động biên dịch dữ liệu thô, lời kể không cấu trúc thành cấu trúc `Key-Value` phù hợp với hệ thống thông qua `Gemini 2.5 Flash API`.
+*   Tự động biên dịch dữ liệu thô, lời kể không cấu trúc thành cấu trúc `Key-Value` phù hợp với hệ thống thông qua kết nối `Gemini 2.5 Flash API`.
 
 ### ⚡ Vận Hành Edge AI Siêu Tốc
 
-*   Tốc độ phản hồi tức thì ($\approx 0\text{ms}$ độ trễ mạng) nhờ xử lý mô hình cục bộ với `TensorFlow.js`, cho phép ứng dụng chạy mượt mà ngay cả khi ngoại tuyến.
+*   Tốc độ phản hồi tức thì, gần như bằng 0ms độ trễ mạng nhờ cơ chế thực thi logic và xử lý mô hình cục bộ ngay trên trình duyệt với `TensorFlow.js`, giúp ứng dụng chạy mượt mà ngay cả khi thiết bị ngoại tuyến.
 
 ---
 
@@ -102,7 +102,7 @@ Hệ thống chuyển đổi các chỉ số lâm sàng thu thập được thà
 
 | Lớp kiến trúc (Layer) | Công nghệ tích hợp | Mục tiêu tối ưu |
 | :--- | :--- | :--- |
-| **Giao diện (Front-End)** | HTML5 Semantic, CSS3 Vanilla, Glassmorphic Glass | Tối đa tốc độ tải trang, tăng mật độ trải nghiệm thị giác cho Bác sĩ. |
+| **Giao diện (Front-End)** | HTML5 Semantic, CSS3 Vanilla, Glassmorphic Design | Tối đa tốc độ tải trang, tăng mật độ trải nghiệm thị giác cho Bác sĩ. |
 | **Xử lý hội thoại (NLP)** | Google Gemini 2.5 Flash API | Trích xuất ngữ nghĩa thực thể y khoa thời gian thực từ chuỗi văn bản tự do. |
 | **Lõi suy luận (Logic)** | Thuật toán Chaining thuần (ES6 Engine) | Thực thi cây quyết định lập luận y học không cần giao tiếp Server. |
 | **Học sâu (Edge Deep Learning)** | TensorFlow.js | Sẵn sàng chạy các mô hình phân loại nén trực tiếp trên trình duyệt. |
@@ -145,14 +145,14 @@ Dưới đây là sơ đồ phân nhiệm chi tiết cho các thành viên thu�
 
 ## 💻 Hướng Dẫn Cài Đặt & Khởi Chạy
 
-### 1. Sao chép kho lưu trữ
+### 1. Phục hồi / Tải mã nguồn về máy
 ```bash
-git clone url?id=3.git
+git clone [https://github.com/trungtin010305/YKhoa.git](https://github.com/trungtin010305/YKhoa.git)
 cd YKhoa
 ```
 
 ### 2. Cấu hình Khóa API
-Mở tệp `app.js` và cập nhật khóa bảo mật của bạn:
+Mở tệp `app.js` và cập nhật khóa bảo mật cá nhân của bạn:
 ```javascript
 const GEMINI_API_KEY = "YOUR_SECURE_GEMINI_API_KEY_HERE";
 ```
@@ -184,15 +184,11 @@ Hệ thống vận hành hoàn toàn ở phía Client. Để các ES6 Module ho�
 ## 🤝 Đóng Góp & Giấy Phép
 
 *   **Đóng góp:** Mọi ý kiến tối ưu hóa mã nguồn hoặc bổ sung cơ sở tri thức y khoa tại `knowledgeBase.js` vui lòng mở một **Pull Request** giải trình chi tiết.
-*   **Giấy phép:** Dự án được bảo hộ và phát hành theo mã nguồn mở [MIT License](https://choosealicense.com/licenses/mit/).
+*   **Giấy phép:** Dự án được bảo hộ và phát hành theo mã nguồn mở [MIT License](https://opensource.org/licenses/MIT).
 *   ## :lock: Tuyên Bố Miễn Trừ Trách Nhiệm Y Khoa (Medical Disclaimer)
 
 > [!WARNING]  
 > **DỰ ÁN ĐƯỢC XÂY DỰNG DÙNG CHO MỤC ĐÍCH GIÁO DỤC, NGHIÊN CỨU CÔNG NGHỆ THÔNG TIN VÀ ĐỊNH HƯỚNG Y KHOA BAN ĐẦU.**
 > 
 > Mọi kết luận chẩn đoán sơ bộ, phác đồ cấp cứu sơ khởi hay phân tích phản ứng tương tác dược lý được đề xuất bởi Hệ chuyên gia/Trí tuệ nhân tạo chỉ mang tính chất tham khảo cứu cánh. Hệ thống **tuyệt đối không thay thế** cho các chỉ định lâm sàng trực tiếp, chẩn đoán hình ảnh cận lâm sàng thực tế và phác đồ điều trị chuyên khoa từ các Bác sĩ, chuyên gia y tế có chứng chỉ hành nghề hợp pháp. Người sử dụng không được tự ý điều chỉnh liều lượng hoặc mua thuốc sử dụng dựa trên đề xuất của ứng dụng này.
-
-<p align="center">
-  <strong>Kiến tạo giải pháp công nghệ số nâng tầm nền Y tế Việt Nam! 🚀</strong><br>
-  Nhóm DaTai - © 2026. Mọi quyền được bảo lưu.
-</p>
+```
